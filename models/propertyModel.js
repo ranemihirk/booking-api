@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 // Property Schema
 const propertySchema = new mongoose.Schema({
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     propertyName: {
         type: String,
         required: true
@@ -12,19 +16,23 @@ const propertySchema = new mongoose.Schema({
     },
     propertyLocationURL: {
         type: String,
-        required: false
+        required: false,
+        default: ''
     },
     propertyDesc: {
         type: String,
-        required: false
+        required: false,
+        default: ''
     },
     propertyProfileImg: {
         type: String,
-        required: false
+        required: false,
+        default: ''
     },
     propertyImages: {
         type: Array,
-        required: false
+        required: false,
+        default: []
     },
     maxOccupancy: {
         type: Number,

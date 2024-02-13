@@ -5,9 +5,12 @@ const jwt = require('jsonwebtoken')
 const app = express()
 const port = 5000
 
+import generateRandomPassword from './helpers/generateRandomPassword'
+
 const User = require('./models/userModel')
 const Booking = require('./models/bookingModel')
 const Property = require('./models/propertyModel')
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -16,7 +19,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-// Auth
+// User
 
 app.get('/login', async (req, res) => {
     try {
@@ -72,6 +75,62 @@ app.post('/register', async (req, res) => {
     }
 })
 
+app.get('/create-user', async (req, res) => {
+    try {
+        console.log('create-user req: ', req.body);
+        const { email } = req.body;
+        // Check if user already exists
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ msg: 'User already exists' });
+        }
+        // Generate a random password
+        const password = generateRandomPassword(10); // Change the password length as needed
+        // Create a new user
+        user = new User(req.body);
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+        // Save user to database
+        await user.save();
+        res.json({ msg: 'User registered successfully' });
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: error.message })
+    }
+})
+
+app.get('/update-user', async (req, res) => {
+    try {
+        console.log('create-user req: ', req.body);
+        const { id } = req.params;
+        const user = await User.findById(id, req.body);
+        // we cannot find any user in database
+        if (!user) {
+            return res.status(404).json({ message: `cannot find any user with ID ${id}` })
+        }
+        const updatedUser = await User.findById(id);
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: error.message })
+    }
+})
+
+app.get('/update-password', async (req, res) => {
+    try {
+        console.log('update-password req: ', req.body);
+        const { email, newPassword } = req.params;
+        const user = await User.updateOne({ email: email }, { $set: { password: newPassword } });
+
+        res.status(200).json({ message: 'password updated successfully.' });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: error.message })
+    }
+})
+
 // Property
 
 app.get('/properties', async (req, res) => {
@@ -88,11 +147,11 @@ app.get('/properties', async (req, res) => {
 app.get('/property/:id', async (req, res) => {
     try {
         console.log('property req: ', req.body);
-        const {id} = req.params;
+        const { id } = req.params;
         const property = await Product.findByIdAndUpdate(id, req.body);
         // we cannot find any property in database
-        if(!property){
-            return res.status(404).json({message: `cannot find any property with ID ${id}`})
+        if (!property) {
+            return res.status(404).json({ message: `cannot find any property with ID ${id}` })
         }
         const updatedProperty = await Property.findById(id);
         res.status(200).json(updatedProperty);
@@ -116,11 +175,11 @@ app.post('/add-property', async (req, res) => {
 app.post('/update-property', async (req, res) => {
     try {
         console.log('update-property req: ', req.body);
-        const {id} = req.params;
+        const { id } = req.params;
         const property = await Product.findByIdAndUpdate(id, req.body);
         // we cannot find any property in database
-        if(!property){
-            return res.status(404).json({message: `cannot find any property with ID ${id}`})
+        if (!property) {
+            return res.status(404).json({ message: `cannot find any property with ID ${id}` })
         }
         const updatedProperty = await Property.findById(id);
         res.status(200).json(updatedProperty);

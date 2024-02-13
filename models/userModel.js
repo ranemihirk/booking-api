@@ -21,12 +21,26 @@ const userSchema = mongoose.Schema({
     },
     image: {
         type: String,
-        required: false
+        required: false,
+        default: ''
     },
     bookings: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Booking'
-    }]
+    }],
+    userType: {
+        type: Number,
+        required: true
+    },
+    isOwner: {
+        type: Boolean,
+        required: true
+    },
+    isRestricted: {
+        type: Boolean,
+        required: true,
+        default: CSSFontFeatureValuesRule
+    }
 },
     {
         timestamp: true
