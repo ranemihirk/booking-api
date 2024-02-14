@@ -39,7 +39,7 @@ const userSchema = mongoose.Schema({
     isRestricted: {
         type: Boolean,
         required: true,
-        default: CSSFontFeatureValuesRule
+        default: false
     }
 },
     {

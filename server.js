@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const app = express()
 const port = 5000
 
-import generateRandomPassword from './helpers/generateRandomPassword'
+const generateRandomPassword = ('./helpers/generateRandomPassword')
 
 const User = require('./models/userModel')
 const Booking = require('./models/bookingModel')
