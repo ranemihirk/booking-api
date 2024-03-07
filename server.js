@@ -3,7 +3,10 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const app = express()
+var cors = require('cors')
 const port = 5000
+
+app.use(cors())
 
 const generateRandomPassword = ('./helpers/generateRandomPassword')
 
@@ -15,13 +18,13 @@ const Property = require('./models/propertyModel')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-app.get('/', (req, res) => {
+app.get('/', (req, res, next) => {
     res.send('Hello World!')
 })
 
 // User
 
-app.get('/login', async (req, res) => {
+app.get('/login', async (req, res, next) => {
     try {
         console.log('login req: ', req.body);
         const { email, password } = req.body;
@@ -51,7 +54,7 @@ app.get('/login', async (req, res) => {
     }
 })
 
-app.post('/register', async (req, res) => {
+app.post('/register', async (req, res, next) => {
     try {
         console.log('register req: ', req.body);
         const { email, password } = req.body;
@@ -75,7 +78,7 @@ app.post('/register', async (req, res) => {
     }
 })
 
-app.get('/create-user', async (req, res) => {
+app.get('/create-user', async (req, res, next) => {
     try {
         console.log('create-user req: ', req.body);
         const { email } = req.body;
@@ -101,7 +104,7 @@ app.get('/create-user', async (req, res) => {
     }
 })
 
-app.get('/update-user', async (req, res) => {
+app.get('/update-user', async (req, res, next) => {
     try {
         console.log('create-user req: ', req.body);
         const { id } = req.params;
@@ -118,7 +121,7 @@ app.get('/update-user', async (req, res) => {
     }
 })
 
-app.get('/update-password', async (req, res) => {
+app.get('/update-password', async (req, res, next) => {
     try {
         console.log('update-password req: ', req.body);
         const { email, newPassword } = req.params;
@@ -133,7 +136,7 @@ app.get('/update-password', async (req, res) => {
 
 // Property
 
-app.get('/properties', async (req, res) => {
+app.get('/properties', async (req, res, next) => {
     try {
         console.log('properties req: ', req.body);
         const properties = await Property.find({});
@@ -144,7 +147,7 @@ app.get('/properties', async (req, res) => {
     }
 })
 
-app.get('/property/:id', async (req, res) => {
+app.get('/property/:id', async (req, res, next) => {
     try {
         console.log('property req: ', req.body);
         const { id } = req.params;
@@ -161,7 +164,7 @@ app.get('/property/:id', async (req, res) => {
     }
 })
 
-app.post('/add-property', async (req, res) => {
+app.post('/add-property', async (req, res, next) => {
     try {
         console.log('add-property req: ', req.body);
         const property = await Property.create(req.body)
@@ -172,7 +175,7 @@ app.post('/add-property', async (req, res) => {
     }
 })
 
-app.post('/update-property', async (req, res) => {
+app.post('/update-property', async (req, res, next) => {
     try {
         console.log('update-property req: ', req.body);
         const { id } = req.params;
