@@ -2,3 +2,4 @@
 /bin
 .dockerignore
 .git
+.vercel
