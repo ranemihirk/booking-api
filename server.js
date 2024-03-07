@@ -193,7 +193,7 @@ app.post('/update-property', async (req, res, next) => {
 })
 
 mongoose.set("strictQuery", false)
-mongoose.connect('mongodb+srv://admin:1234567890@bookingapi.rexw8le.mongodb.net/node-API?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://admin:1234567890@bookingapi.rexw8le.mongodb.net/node-API?retryWrites=true&w=majority?directConnection=true')
     .then(() => {
         console.log('Connected!')
         app.listen(port, () => {
